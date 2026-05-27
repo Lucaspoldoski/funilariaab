@@ -47,7 +47,7 @@ function VehicleDetail() {
   });
 
   async function updateStatus(status: string) {
-    const { error } = await supabase.from("vehicles").update({ status }).eq("id", id);
+    const { error } = await supabase.from("vehicles").update({ status: status as VehicleStatus }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Status atualizado");
     qc.invalidateQueries({ queryKey: ["vehicle", id] });

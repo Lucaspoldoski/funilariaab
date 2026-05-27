@@ -63,7 +63,7 @@ function NewVehicle() {
         mileage: fd.get("mileage") ? Number(fd.get("mileage")) : null,
         insurer: String(fd.get("insurer") ?? "") || null,
         claim_number: String(fd.get("claim_number") ?? "") || null,
-        status,
+        status: status as typeof VEHICLE_STATUSES[number],
         entry_date: String(fd.get("entry_date") ?? "") || null,
         expected_delivery: String(fd.get("expected_delivery") ?? "") || null,
         notes: String(fd.get("notes") ?? "") || null,

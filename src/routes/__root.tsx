@@ -78,9 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Sistema premium de gestão para funilarias automotivas: veículos, OS, orçamentos e financeiro." },
       { name: "author", content: "Funilaria Pro" },
       { property: "og:title", content: "Funilaria Pro · Gestão automotiva" },
-      { property: "og:description", content: "Sistema premium de gestão automotiva." },
+      { property: "og:description", content: "Sistema premium de gestão para funilarias automotivas: veículos, OS, orçamentos e financeiro." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Funilaria Pro · Gestão automotiva" },
+      { name: "twitter:description", content: "Sistema premium de gestão para funilarias automotivas: veículos, OS, orçamentos e financeiro." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/60be28ca-6f77-47e6-88a8-3316302a07ed/id-preview-5e3ead46--ef2e00ec-5248-4cc8-9e04-cb6eb2dd2cc8.lovable.app-1779847651140.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/60be28ca-6f77-47e6-88a8-3316302a07ed/id-preview-5e3ead46--ef2e00ec-5248-4cc8-9e04-cb6eb2dd2cc8.lovable.app-1779847651140.png" },
     ],
     links: [
       {

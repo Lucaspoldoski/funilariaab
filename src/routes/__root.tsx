@@ -81,6 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Sistema premium de gestão automotiva." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+    ],
     links: [
       {
         rel: "stylesheet",
@@ -113,7 +114,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthProvider>
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

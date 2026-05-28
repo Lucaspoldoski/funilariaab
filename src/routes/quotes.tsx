@@ -61,7 +61,7 @@ function QuotesPage() {
   }
 
   async function updateStatus(id: string, status: string) {
-    const { error } = await supabase.from("quotes").update({ status }).eq("id", id);
+    const { error } = await supabase.from("quotes").update({ status: status as any }).eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["quotes"] });
   }

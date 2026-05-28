@@ -152,10 +152,10 @@ function OrderDetail() {
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2 text-base"><FileSignature className="h-4 w-4" /> Assinatura do cliente</CardTitle></CardHeader>
         <CardContent>
-          {order.signature_data ? (
+          {o.signature_data ? (
             <div>
-              <img src={order.signature_data} alt="Assinatura" className="h-40 rounded-md border bg-white object-contain p-2" />
-              <p className="mt-2 text-xs text-muted-foreground">Assinado em {fmtDateTime(order.signed_at)}</p>
+              <img src={o.signature_data} alt="Assinatura" className="h-40 rounded-md border bg-white object-contain p-2" />
+              <p className="mt-2 text-xs text-muted-foreground">Assinado em {fmtDateTime(o.signed_at)}</p>
             </div>
           ) : (
             <>

@@ -85,12 +85,12 @@ function OrderDetail() {
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon"><Link to="/orders"><ArrowLeft className="h-4 w-4" /></Link></Button>
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">OS #{order.number}</h1>
-            <p className="text-sm text-muted-foreground">{fmtDateTime(order.created_at)}</p>
+            <h1 className="text-2xl font-semibold tracking-tight">OS #{o.number}</h1>
+            <p className="text-sm text-muted-foreground">{fmtDateTime(o.created_at)}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Select value={order.status} onValueChange={updateStatus}>
+          <Select value={o.status} onValueChange={updateStatus}>
             <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
             <SelectContent>{STATUSES.map(s => <SelectItem key={s} value={s}>{LABEL[s]}</SelectItem>)}</SelectContent>
           </Select>
@@ -104,20 +104,20 @@ function OrderDetail() {
           <div className="mb-6 flex flex-wrap justify-between gap-4 border-b pb-4">
             <div>
               <p className="text-xs uppercase text-muted-foreground">Cliente</p>
-              <p className="text-base font-semibold">{order.clients?.name}</p>
-              <p className="text-sm text-muted-foreground">{order.clients?.phone} {order.clients?.email && `· ${order.clients?.email}`}</p>
+              <p className="text-base font-semibold">{o.clients?.name}</p>
+              <p className="text-sm text-muted-foreground">{o.clients?.phone} {o.clients?.email && `· ${o.clients?.email}`}</p>
             </div>
             <div className="text-right">
               <p className="text-xs uppercase text-muted-foreground">Veículo</p>
-              <p className="text-base font-semibold">{order.vehicles?.brand} {order.vehicles?.model}</p>
-              <p className="text-sm font-mono text-muted-foreground">{order.vehicles?.plate}</p>
+              <p className="text-base font-semibold">{o.vehicles?.brand} {o.vehicles?.model}</p>
+              <p className="text-sm font-mono text-muted-foreground">{o.vehicles?.plate}</p>
             </div>
           </div>
 
-          {order.description && (
+          {o.description && (
             <div className="mb-4">
               <p className="text-xs uppercase text-muted-foreground">Descrição</p>
-              <p className="text-sm whitespace-pre-wrap">{order.description}</p>
+              <p className="text-sm whitespace-pre-wrap">{o.description}</p>
             </div>
           )}
 
@@ -140,13 +140,14 @@ function OrderDetail() {
           </table>
 
           <div className="mt-4 ml-auto max-w-xs space-y-1 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">Mão de obra</span><span>{fmtBRL(order.labor_total)}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Peças</span><span>{fmtBRL(order.parts_total)}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Desconto</span><span>-{fmtBRL(order.discount)}</span></div>
-            <div className="flex justify-between border-t pt-2 text-base font-semibold"><span>Total</span><span>{fmtBRL(order.total)}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Mão de obra</span><span>{fmtBRL(o.labor_total)}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Peças</span><span>{fmtBRL(o.parts_total)}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Desconto</span><span>-{fmtBRL(o.discount)}</span></div>
+            <div className="flex justify-between border-t pt-2 text-base font-semibold"><span>Total</span><span>{fmtBRL(o.total)}</span></div>
           </div>
         </CardContent>
       </Card>
+
 
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2 text-base"><FileSignature className="h-4 w-4" /> Assinatura do cliente</CardTitle></CardHeader>

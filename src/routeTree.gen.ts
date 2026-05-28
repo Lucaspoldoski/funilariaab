@@ -20,6 +20,8 @@ import { Route as VehiclesIndexRouteImport } from './routes/vehicles/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as VehiclesNewRouteImport } from './routes/vehicles/new'
 import { Route as VehiclesIdRouteImport } from './routes/vehicles/$id'
+import { Route as OrdersNewRouteImport } from './routes/orders.new'
+import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
@@ -76,15 +78,27 @@ const VehiclesIdRoute = VehiclesIdRouteImport.update({
   path: '/vehicles/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersNewRoute = OrdersNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => OrdersRoute,
+} as any)
+const OrdersIdRoute = OrdersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OrdersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
-  '/orders': typeof OrdersRoute
+  '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
@@ -95,9 +109,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
-  '/orders': typeof OrdersRoute
+  '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients': typeof ClientsIndexRoute
@@ -109,9 +125,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
-  '/orders': typeof OrdersRoute
+  '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
@@ -127,6 +145,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/orders/$id'
+    | '/orders/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
@@ -140,6 +160,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/orders/$id'
+    | '/orders/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients'
@@ -153,6 +175,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/orders/$id'
+    | '/orders/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
@@ -164,7 +188,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
   FinanceRoute: typeof FinanceRoute
-  OrdersRoute: typeof OrdersRoute
+  OrdersRoute: typeof OrdersRouteWithChildren
   QuotesRoute: typeof QuotesRoute
   ReportsRoute: typeof ReportsRoute
   VehiclesIdRoute: typeof VehiclesIdRoute
@@ -252,15 +276,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VehiclesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders/new': {
+      id: '/orders/new'
+      path: '/new'
+      fullPath: '/orders/new'
+      preLoaderRoute: typeof OrdersNewRouteImport
+      parentRoute: typeof OrdersRoute
+    }
+    '/orders/$id': {
+      id: '/orders/$id'
+      path: '/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof OrdersRoute
+    }
   }
 }
+
+interface OrdersRouteChildren {
+  OrdersIdRoute: typeof OrdersIdRoute
+  OrdersNewRoute: typeof OrdersNewRoute
+}
+
+const OrdersRouteChildren: OrdersRouteChildren = {
+  OrdersIdRoute: OrdersIdRoute,
+  OrdersNewRoute: OrdersNewRoute,
+}
+
+const OrdersRouteWithChildren =
+  OrdersRoute._addFileChildren(OrdersRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
   FinanceRoute: FinanceRoute,
-  OrdersRoute: OrdersRoute,
+  OrdersRoute: OrdersRouteWithChildren,
   QuotesRoute: QuotesRoute,
   ReportsRoute: ReportsRoute,
   VehiclesIdRoute: VehiclesIdRoute,
@@ -271,3 +322,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

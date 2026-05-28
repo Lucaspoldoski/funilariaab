@@ -105,7 +105,29 @@ export type Database = {
           updated_at?: string
           vehicle_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tx_client_fk"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tx_order_fk"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tx_vehicle_fk"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -218,7 +240,22 @@ export type Database = {
           valid_until?: string | null
           vehicle_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "quotes_client_fk"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_vehicle_fk"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_order_items: {
         Row: {
@@ -313,7 +350,22 @@ export type Database = {
           updated_at?: string
           vehicle_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "service_orders_client_fk"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_orders_vehicle_fk"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -364,7 +416,15 @@ export type Database = {
           uploaded_by?: string | null
           vehicle_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "vp_vehicle_fk"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vehicle_status_history: {
         Row: {

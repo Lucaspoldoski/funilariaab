@@ -41,18 +41,19 @@ function OrderDetail() {
 
   if (!order) return <p className="text-muted-foreground">Carregando...</p>;
 
+  if (!order) return <p className="text-muted-foreground">Carregando...</p>;
+
   async function updateStatus(s: string) {
-    const { error } = await supabase.from("service_orders").update({ status: s }).eq("id", id);
+    const { error } = await supabase.from("service_orders").update({ status: s as any }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Status atualizado");
     qc.invalidateQueries({ queryKey: ["order", id] });
 
-    // when concluded → create receivable
     if (s === "concluida") {
       await supabase.from("financial_transactions").insert({
         type: "receita", status: "pendente", category: "OS",
-        description: `OS #${order.number} - ${order.clients?.name}`,
-        amount: order.total, order_id: id, client_id: order.client_id, vehicle_id: order.vehicle_id,
+        description: `OS #${order!.number} - ${(order as any)!.clients?.name ?? ""}`,
+        amount: order!.total, order_id: id, client_id: order!.client_id, vehicle_id: order!.vehicle_id,
       });
       toast.success("Recebível gerado no financeiro");
     }
@@ -74,6 +75,9 @@ function OrderDetail() {
     toast.success("OS excluída");
     navigate({ to: "/orders" });
   }
+
+  const o = order as any;
+
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 print:max-w-none">

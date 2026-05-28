@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { STATUS_COLORS, STATUS_LABELS, VEHICLE_STATUSES, type VehicleStatus } from "@/lib/vehicle-status";
+import { VehiclePhotos } from "@/components/vehicle-photos";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/vehicles/$id")({
   component: () => <AppLayout><VehicleDetail /></AppLayout>,
@@ -118,32 +120,45 @@ function VehicleDetail() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>Timeline do veículo</CardTitle></CardHeader>
-        <CardContent>
-          {history.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sem alterações registradas.</p>
-          ) : (
-            <ol className="relative space-y-4 border-l-2 border-border pl-5">
-              {history.map((h: any) => (
-                <li key={h.id} className="relative">
-                  <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-background" />
-                  <div className="flex flex-wrap items-center gap-2 text-sm">
-                    {h.old_status && <Badge variant="outline">{STATUS_LABELS[h.old_status as VehicleStatus]}</Badge>}
-                    <span className="text-muted-foreground">→</span>
-                    <Badge variant="outline" className={STATUS_COLORS[h.new_status as VehicleStatus]}>
-                      {STATUS_LABELS[h.new_status as VehicleStatus]}
-                    </Badge>
-                  </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {new Date(h.created_at).toLocaleString("pt-BR")}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          )}
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="timeline">
+        <TabsList>
+          <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          <TabsTrigger value="photos">Fotos</TabsTrigger>
+        </TabsList>
+        <TabsContent value="timeline">
+          <Card>
+            <CardHeader><CardTitle>Timeline do veículo</CardTitle></CardHeader>
+            <CardContent>
+              {history.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Sem alterações registradas.</p>
+              ) : (
+                <ol className="relative space-y-4 border-l-2 border-border pl-5">
+                  {history.map((h: any) => (
+                    <li key={h.id} className="relative">
+                      <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-background" />
+                      <div className="flex flex-wrap items-center gap-2 text-sm">
+                        {h.old_status && <Badge variant="outline">{STATUS_LABELS[h.old_status as VehicleStatus]}</Badge>}
+                        <span className="text-muted-foreground">→</span>
+                        <Badge variant="outline" className={STATUS_COLORS[h.new_status as VehicleStatus]}>
+                          {STATUS_LABELS[h.new_status as VehicleStatus]}
+                        </Badge>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{new Date(h.created_at).toLocaleString("pt-BR")}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="photos">
+          <Card>
+            <CardHeader><CardTitle>Fotos do veículo</CardTitle></CardHeader>
+            <CardContent><VehiclePhotos vehicleId={id} /></CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
     </div>
   );
 }

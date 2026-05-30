@@ -9,12 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VehiclesIndexRouteImport } from './routes/vehicles/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients/index'
@@ -23,6 +25,11 @@ import { Route as VehiclesIdRouteImport } from './routes/vehicles/$id'
 import { Route as OrdersNewRouteImport } from './routes/orders.new'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -51,6 +58,11 @@ const CalendarRoute = CalendarRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -91,12 +103,14 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
@@ -106,12 +120,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
@@ -122,12 +138,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRoute
   '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
@@ -139,12 +157,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/audit'
     | '/auth'
     | '/calendar'
     | '/finance'
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/settings'
     | '/orders/$id'
     | '/orders/new'
     | '/vehicles/$id'
@@ -154,12 +174,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/audit'
     | '/auth'
     | '/calendar'
     | '/finance'
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/settings'
     | '/orders/$id'
     | '/orders/new'
     | '/vehicles/$id'
@@ -169,12 +191,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/audit'
     | '/auth'
     | '/calendar'
     | '/finance'
     | '/orders'
     | '/quotes'
     | '/reports'
+    | '/settings'
     | '/orders/$id'
     | '/orders/new'
     | '/vehicles/$id'
@@ -185,12 +209,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuditRoute: typeof AuditRoute
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
   FinanceRoute: typeof FinanceRoute
   OrdersRoute: typeof OrdersRouteWithChildren
   QuotesRoute: typeof QuotesRoute
   ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
   VehiclesIdRoute: typeof VehiclesIdRoute
   VehiclesNewRoute: typeof VehiclesNewRoute
   ClientsIndexRoute: typeof ClientsIndexRoute
@@ -199,6 +225,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -239,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -308,12 +348,14 @@ const OrdersRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuditRoute: AuditRoute,
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
   FinanceRoute: FinanceRoute,
   OrdersRoute: OrdersRouteWithChildren,
   QuotesRoute: QuotesRoute,
   ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
   VehiclesIdRoute: VehiclesIdRoute,
   VehiclesNewRoute: VehiclesNewRoute,
   ClientsIndexRoute: ClientsIndexRoute,

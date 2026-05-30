@@ -41,8 +41,6 @@ function OrderDetail() {
 
   if (!order) return <p className="text-muted-foreground">Carregando...</p>;
 
-  if (!order) return <p className="text-muted-foreground">Carregando...</p>;
-
   async function updateStatus(s: string) {
     const { error } = await supabase.from("service_orders").update({ status: s as any }).eq("id", id);
     if (error) return toast.error(error.message);

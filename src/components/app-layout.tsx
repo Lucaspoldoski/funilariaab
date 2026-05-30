@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, Car, Users, Calendar, FileText, Receipt,
-  Wallet, Bell, LogOut, Settings, Wrench, Moon, Sun,
+  Wallet, Bell, LogOut, Settings, Wrench, Moon, Sun, ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,11 @@ const NAV = [
   { to: "/quotes", label: "Orçamentos", icon: FileText },
   { to: "/finance", label: "Financeiro", icon: Wallet },
   { to: "/reports", label: "Relatórios", icon: Receipt },
+];
+
+const ADMIN_NAV = [
+  { to: "/settings", label: "Configurações", icon: Settings },
+  { to: "/audit", label: "Auditoria", icon: ShieldCheck },
 ];
 
 function useDarkMode() {
@@ -80,6 +85,26 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     item.to === "/"
                       ? location.pathname === "/"
                       : location.pathname.startsWith(item.to);
+                  return (
+                    <SidebarMenuItem key={item.to}>
+                      <SidebarMenuButton asChild isActive={active} tooltip={item.label}>
+                        <Link to={item.to}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>Administração</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {ADMIN_NAV.map((item) => {
+                  const active = location.pathname.startsWith(item.to);
                   return (
                     <SidebarMenuItem key={item.to}>
                       <SidebarMenuButton asChild isActive={active} tooltip={item.label}>

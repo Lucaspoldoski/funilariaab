@@ -13,6 +13,8 @@ import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { fmtBRL } from "@/lib/format";
+import { MultiSelect } from "@/components/multi-select";
+import { useCategories, useCreateCategory } from "@/hooks/use-categories";
 
 export const Route = createFileRoute("/orders/new")({ component: () => <AppLayout><NewOrder /></AppLayout> });
 
@@ -25,7 +27,10 @@ function NewOrder() {
   const [description, setDescription] = React.useState("");
   const [discount, setDiscount] = React.useState(0);
   const [items, setItems] = React.useState<Item[]>([{ item_type: "servico", description: "", quantity: 1, unit_price: 0 }]);
+  const [selectedServices, setSelectedServices] = React.useState<string[]>([]);
   const [saving, setSaving] = React.useState(false);
+  const { data: serviceCats = [] } = useCategories("servico");
+  const createCat = useCreateCategory();
 
   const { data: vehicles = [] } = useQuery({
     queryKey: ["vehicles-select"],
@@ -85,6 +90,25 @@ function NewOrder() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <Label>Serviços a realizar (multi-seleção)</Label>
+            <MultiSelect
+              options={(serviceCats as any[]).map((c) => ({ value: c.id, label: c.name, color: c.color }))}
+              value={selectedServices}
+              onChange={(v) => {
+                setSelectedServices(v);
+                // sync to items list — preserve manually entered items, add new service rows
+                const existingDescs = new Set(items.map((i) => i.description.toLowerCase()));
+                const toAdd = (serviceCats as any[])
+                  .filter((c) => v.includes(c.id) && !existingDescs.has(c.name.toLowerCase()))
+                  .map((c) => ({ item_type: "servico" as const, description: c.name, quantity: 1, unit_price: 0 }));
+                if (toAdd.length) setItems([...items.filter((i) => i.description.trim()), ...toAdd]);
+              }}
+              onCreate={(name) => createCat("servico", name)}
+              placeholder="Selecione serviços..."
+              createLabel="Cadastrar serviço"
+            />
           </div>
           <div>
             <Label>Descrição geral do serviço</Label>

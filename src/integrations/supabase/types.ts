@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string | null
+          table_name: string
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name?: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          active: boolean
+          color: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          slug: string
+          type: Database["public"]["Enums"]["category_type"]
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          slug: string
+          type: Database["public"]["Enums"]["category_type"]
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          type?: Database["public"]["Enums"]["category_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       clients: {
         Row: {
           address: string | null
@@ -57,6 +129,7 @@ export type Database = {
         Row: {
           amount: number
           category: string | null
+          category_id: string | null
           client_id: string | null
           created_at: string
           created_by: string | null
@@ -66,6 +139,7 @@ export type Database = {
           notes: string | null
           order_id: string | null
           paid_date: string | null
+          payment_method_id: string | null
           status: Database["public"]["Enums"]["transaction_status"]
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at: string
@@ -74,6 +148,7 @@ export type Database = {
         Insert: {
           amount: number
           category?: string | null
+          category_id?: string | null
           client_id?: string | null
           created_at?: string
           created_by?: string | null
@@ -83,6 +158,7 @@ export type Database = {
           notes?: string | null
           order_id?: string | null
           paid_date?: string | null
+          payment_method_id?: string | null
           status?: Database["public"]["Enums"]["transaction_status"]
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
@@ -91,6 +167,7 @@ export type Database = {
         Update: {
           amount?: number
           category?: string | null
+          category_id?: string | null
           client_id?: string | null
           created_at?: string
           created_by?: string | null
@@ -100,12 +177,27 @@ export type Database = {
           notes?: string | null
           order_id?: string | null
           paid_date?: string | null
+          payment_method_id?: string | null
           status?: Database["public"]["Enums"]["transaction_status"]
           type?: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
           vehicle_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "financial_transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_payment_method_id_fkey"
+            columns: ["payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tx_client_fk"
             columns: ["client_id"]
@@ -161,6 +253,7 @@ export type Database = {
       }
       quote_items: {
         Row: {
+          category_id: string | null
           created_at: string
           description: string
           id: string
@@ -171,6 +264,7 @@ export type Database = {
           unit_price: number
         }
         Insert: {
+          category_id?: string | null
           created_at?: string
           description: string
           id?: string
@@ -181,6 +275,7 @@ export type Database = {
           unit_price?: number
         }
         Update: {
+          category_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -191,6 +286,13 @@ export type Database = {
           unit_price?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "quote_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quote_items_quote_id_fkey"
             columns: ["quote_id"]
@@ -259,6 +361,7 @@ export type Database = {
       }
       service_order_items: {
         Row: {
+          category_id: string | null
           created_at: string
           description: string
           id: string
@@ -269,6 +372,7 @@ export type Database = {
           unit_price: number
         }
         Insert: {
+          category_id?: string | null
           created_at?: string
           description: string
           id?: string
@@ -279,6 +383,7 @@ export type Database = {
           unit_price?: number
         }
         Update: {
+          category_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -289,6 +394,13 @@ export type Database = {
           unit_price?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "service_order_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "service_order_items_order_id_fkey"
             columns: ["order_id"]
@@ -392,27 +504,48 @@ export type Database = {
         Row: {
           caption: string | null
           created_at: string
+          damage_description: string | null
           id: string
           marks: Json
+          order_id: string | null
+          parts_needed: string | null
           path: string
+          phase: Database["public"]["Enums"]["photo_phase"]
+          quote_id: string | null
+          service_needed: string | null
+          technical_notes: string | null
           uploaded_by: string | null
           vehicle_id: string
         }
         Insert: {
           caption?: string | null
           created_at?: string
+          damage_description?: string | null
           id?: string
           marks?: Json
+          order_id?: string | null
+          parts_needed?: string | null
           path: string
+          phase?: Database["public"]["Enums"]["photo_phase"]
+          quote_id?: string | null
+          service_needed?: string | null
+          technical_notes?: string | null
           uploaded_by?: string | null
           vehicle_id: string
         }
         Update: {
           caption?: string | null
           created_at?: string
+          damage_description?: string | null
           id?: string
           marks?: Json
+          order_id?: string | null
+          parts_needed?: string | null
           path?: string
+          phase?: Database["public"]["Enums"]["photo_phase"]
+          quote_id?: string | null
+          service_needed?: string | null
+          technical_notes?: string | null
           uploaded_by?: string | null
           vehicle_id?: string
         }
@@ -482,6 +615,7 @@ export type Database = {
           model: string
           notes: string | null
           plate: string
+          service_categories: string[] | null
           status: Database["public"]["Enums"]["vehicle_status"]
           updated_at: string
           year: number | null
@@ -503,6 +637,7 @@ export type Database = {
           model: string
           notes?: string | null
           plate: string
+          service_categories?: string[] | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           updated_at?: string
           year?: number | null
@@ -524,6 +659,7 @@ export type Database = {
           model?: string
           notes?: string | null
           plate?: string
+          service_categories?: string[] | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           updated_at?: string
           year?: number | null
@@ -550,9 +686,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      unaccent_safe: { Args: { t: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "manager" | "employee"
+      category_type:
+        | "servico"
+        | "peca"
+        | "despesa"
+        | "receita"
+        | "forma_pagamento"
+        | "prioridade"
+        | "status_personalizado"
       item_type: "servico" | "peca"
       order_status:
         | "rascunho"
@@ -560,6 +705,7 @@ export type Database = {
         | "em_execucao"
         | "concluida"
         | "cancelada"
+      photo_phase: "antes" | "durante" | "depois" | "outro"
       quote_status: "pendente" | "aprovado" | "recusado" | "expirado"
       transaction_status: "pendente" | "pago" | "atrasado" | "cancelado"
       transaction_type: "receita" | "despesa"
@@ -698,6 +844,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "employee"],
+      category_type: [
+        "servico",
+        "peca",
+        "despesa",
+        "receita",
+        "forma_pagamento",
+        "prioridade",
+        "status_personalizado",
+      ],
       item_type: ["servico", "peca"],
       order_status: [
         "rascunho",
@@ -706,6 +861,7 @@ export const Constants = {
         "concluida",
         "cancelada",
       ],
+      photo_phase: ["antes", "durante", "depois", "outro"],
       quote_status: ["pendente", "aprovado", "recusado", "expirado"],
       transaction_status: ["pendente", "pago", "atrasado", "cancelado"],
       transaction_type: ["receita", "despesa"],

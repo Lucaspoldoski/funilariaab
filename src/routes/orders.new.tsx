@@ -114,6 +114,8 @@ function NewOrder() {
             <Label>Descrição geral do serviço</Label>
             <Textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Ex.: Reparo de para-choque dianteiro, pintura da porta..." />
           </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

@@ -22,6 +22,8 @@ import { Route as VehiclesIndexRouteImport } from './routes/vehicles/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as VehiclesNewRouteImport } from './routes/vehicles/new'
 import { Route as VehiclesIdRouteImport } from './routes/vehicles/$id'
+import { Route as QuotesNewRouteImport } from './routes/quotes.new'
+import { Route as QuotesIdRouteImport } from './routes/quotes.$id'
 import { Route as OrdersNewRouteImport } from './routes/orders.new'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 
@@ -90,6 +92,16 @@ const VehiclesIdRoute = VehiclesIdRouteImport.update({
   path: '/vehicles/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuotesNewRoute = QuotesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => QuotesRoute,
+} as any)
+const QuotesIdRoute = QuotesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => QuotesRoute,
+} as any)
 const OrdersNewRoute = OrdersNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -108,11 +120,13 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
-  '/quotes': typeof QuotesRoute
+  '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
+  '/quotes/$id': typeof QuotesIdRoute
+  '/quotes/new': typeof QuotesNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
@@ -125,11 +139,13 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
-  '/quotes': typeof QuotesRoute
+  '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
+  '/quotes/$id': typeof QuotesIdRoute
+  '/quotes/new': typeof QuotesNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients': typeof ClientsIndexRoute
@@ -143,11 +159,13 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
   '/orders': typeof OrdersRouteWithChildren
-  '/quotes': typeof QuotesRoute
+  '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
+  '/quotes/$id': typeof QuotesIdRoute
+  '/quotes/new': typeof QuotesNewRoute
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
@@ -167,6 +185,8 @@ export interface FileRouteTypes {
     | '/settings'
     | '/orders/$id'
     | '/orders/new'
+    | '/quotes/$id'
+    | '/quotes/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
@@ -184,6 +204,8 @@ export interface FileRouteTypes {
     | '/settings'
     | '/orders/$id'
     | '/orders/new'
+    | '/quotes/$id'
+    | '/quotes/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients'
@@ -201,6 +223,8 @@ export interface FileRouteTypes {
     | '/settings'
     | '/orders/$id'
     | '/orders/new'
+    | '/quotes/$id'
+    | '/quotes/new'
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
@@ -214,7 +238,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   FinanceRoute: typeof FinanceRoute
   OrdersRoute: typeof OrdersRouteWithChildren
-  QuotesRoute: typeof QuotesRoute
+  QuotesRoute: typeof QuotesRouteWithChildren
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   VehiclesIdRoute: typeof VehiclesIdRoute
@@ -316,6 +340,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VehiclesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quotes/new': {
+      id: '/quotes/new'
+      path: '/new'
+      fullPath: '/quotes/new'
+      preLoaderRoute: typeof QuotesNewRouteImport
+      parentRoute: typeof QuotesRoute
+    }
+    '/quotes/$id': {
+      id: '/quotes/$id'
+      path: '/$id'
+      fullPath: '/quotes/$id'
+      preLoaderRoute: typeof QuotesIdRouteImport
+      parentRoute: typeof QuotesRoute
+    }
     '/orders/new': {
       id: '/orders/new'
       path: '/new'
@@ -346,6 +384,19 @@ const OrdersRouteChildren: OrdersRouteChildren = {
 const OrdersRouteWithChildren =
   OrdersRoute._addFileChildren(OrdersRouteChildren)
 
+interface QuotesRouteChildren {
+  QuotesIdRoute: typeof QuotesIdRoute
+  QuotesNewRoute: typeof QuotesNewRoute
+}
+
+const QuotesRouteChildren: QuotesRouteChildren = {
+  QuotesIdRoute: QuotesIdRoute,
+  QuotesNewRoute: QuotesNewRoute,
+}
+
+const QuotesRouteWithChildren =
+  QuotesRoute._addFileChildren(QuotesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
@@ -353,7 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   FinanceRoute: FinanceRoute,
   OrdersRoute: OrdersRouteWithChildren,
-  QuotesRoute: QuotesRoute,
+  QuotesRoute: QuotesRouteWithChildren,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   VehiclesIdRoute: VehiclesIdRoute,

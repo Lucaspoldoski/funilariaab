@@ -98,6 +98,7 @@ export type Database = {
           notes: string | null
           phone: string | null
           updated_at: string
+          whatsapp: string | null
         }
         Insert: {
           address?: string | null
@@ -110,6 +111,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           updated_at?: string
+          whatsapp?: string | null
         }
         Update: {
           address?: string | null
@@ -122,6 +124,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
@@ -305,11 +308,18 @@ export type Database = {
       quotes: {
         Row: {
           client_id: string
+          converted_order_id: string | null
           created_at: string
           created_by: string | null
           description: string | null
+          diagram_marks: Json
+          discount: number
+          discount_type: string
           id: string
+          labor_total: number
+          notes: string | null
           number: number
+          parts_total: number
           status: Database["public"]["Enums"]["quote_status"]
           total: number
           updated_at: string
@@ -318,11 +328,18 @@ export type Database = {
         }
         Insert: {
           client_id: string
+          converted_order_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          diagram_marks?: Json
+          discount?: number
+          discount_type?: string
           id?: string
+          labor_total?: number
+          notes?: string | null
           number?: number
+          parts_total?: number
           status?: Database["public"]["Enums"]["quote_status"]
           total?: number
           updated_at?: string
@@ -331,11 +348,18 @@ export type Database = {
         }
         Update: {
           client_id?: string
+          converted_order_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          diagram_marks?: Json
+          discount?: number
+          discount_type?: string
           id?: string
+          labor_total?: number
+          notes?: string | null
           number?: number
+          parts_total?: number
           status?: Database["public"]["Enums"]["quote_status"]
           total?: number
           updated_at?: string
@@ -348,6 +372,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_converted_order_id_fkey"
+            columns: ["converted_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
             referencedColumns: ["id"]
           },
           {

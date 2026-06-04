@@ -136,3 +136,11 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { background: white !important; color: black !important; }
+  [data-sidebar], aside, nav { display: none !important; }
+  .print\:hidden { display: none !important; }
+}
+

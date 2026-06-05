@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/app-layout";
+import { AdminGuard } from "@/components/admin-guard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,15 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { fmtBRL, fmtDate } from "@/lib/format";
 
-export const Route = createFileRoute("/finance")({ component: () => <AppLayout><FinancePage /></AppLayout> });
+export const Route = createFileRoute("/finance")({
+  component: () => (
+    <AppLayout>
+      <AdminGuard>
+        <FinancePage />
+      </AdminGuard>
+    </AppLayout>
+  ),
+});
 
 function FinancePage() {
   const [tab, setTab] = React.useState<"all" | "receita" | "despesa">("all");

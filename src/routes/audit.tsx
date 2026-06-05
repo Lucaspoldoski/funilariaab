@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/app-layout";
+import { AdminGuard } from "@/components/admin-guard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { fmtDateTime } from "@/lib/format";
 import { ShieldCheck } from "lucide-react";
 
-export const Route = createFileRoute("/audit")({ component: () => <AppLayout><AuditPage /></AppLayout> });
+export const Route = createFileRoute("/audit")({
+  component: () => (
+    <AppLayout>
+      <AdminGuard roles={["admin"]}>
+        <AuditPage />
+      </AdminGuard>
+    </AppLayout>
+  ),
+});
 
 const TABLE_LABEL: Record<string, string> = {
   clients: "Cliente", vehicles: "Veículo", service_orders: "OS", quotes: "Orçamento", financial_transactions: "Financeiro",

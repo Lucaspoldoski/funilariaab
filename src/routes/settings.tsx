@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/app-layout";
+import { AdminGuard } from "@/components/admin-guard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,15 @@ import { Plus, Trash2, Settings as SettingsIcon } from "lucide-react";
 import { toast } from "sonner";
 import type { CategoryType } from "@/hooks/use-categories";
 
-export const Route = createFileRoute("/settings")({ component: () => <AppLayout><SettingsPage /></AppLayout> });
+export const Route = createFileRoute("/settings")({
+  component: () => (
+    <AppLayout>
+      <AdminGuard>
+        <SettingsPage />
+      </AdminGuard>
+    </AppLayout>
+  ),
+});
 
 const TABS: { type: CategoryType; label: string; description: string }[] = [
   { type: "servico", label: "Serviços", description: "Categorias de serviços (funilaria, pintura...)" },

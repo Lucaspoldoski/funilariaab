@@ -50,9 +50,13 @@ function QuoteDetail() {
     queryFn: async () => (await supabase.from("quote_items").select("*").eq("quote_id", id).order("created_at")).data ?? [],
   });
   const { data: photos = [] } = useQuery({
-    queryKey: ["quote-photos", quote?.vehicle_id],
+    queryKey: ["quote-photos", id, quote?.vehicle_id],
     enabled: !!quote?.vehicle_id,
-    queryFn: async () => (await supabase.from("vehicle_photos").select("*").eq("vehicle_id", quote!.vehicle_id!).order("created_at")).data ?? [],
+    queryFn: async () => (await supabase
+      .from("vehicle_photos")
+      .select("*")
+      .or(`quote_id.eq.${id},and(quote_id.is.null,vehicle_id.eq.${quote!.vehicle_id!})`)
+      .order("created_at")).data ?? [],
   });
 
   React.useEffect(() => {
@@ -274,6 +278,13 @@ function QuoteDetail() {
               <div className="flex justify-between"><span className="text-muted-foreground">Desconto</span><span>- {fmtBRL(q.discount)}</span></div>
               <div className="flex justify-between border-t pt-2 text-lg font-semibold"><span>Total</span><span>{fmtBRL(q.total)}</span></div>
               {q.valid_until && <p className="pt-2 text-xs text-muted-foreground">Válido até {fmtDate(q.valid_until)}</p>}
+            </div>
+
+            <div className="mt-6 grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
+              {q.payment_method && <div><p className="text-xs uppercase text-muted-foreground">Forma de pagamento</p><p>{q.payment_method}</p></div>}
+              {q.payment_terms && <div><p className="text-xs uppercase text-muted-foreground">Condições</p><p>{q.payment_terms}</p></div>}
+              {q.warranty && <div><p className="text-xs uppercase text-muted-foreground">Garantia</p><p>{q.warranty}</p></div>}
+              {q.delivery_forecast && <div><p className="text-xs uppercase text-muted-foreground">Previsão de entrega</p><p>{fmtDate(q.delivery_forecast)}</p></div>}
             </div>
 
             {q.notes && (

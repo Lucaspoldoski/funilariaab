@@ -280,6 +280,13 @@ function QuoteDetail() {
               {q.valid_until && <p className="pt-2 text-xs text-muted-foreground">Válido até {fmtDate(q.valid_until)}</p>}
             </div>
 
+            <div className="mt-6 grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
+              {q.payment_method && <div><p className="text-xs uppercase text-muted-foreground">Forma de pagamento</p><p>{q.payment_method}</p></div>}
+              {q.payment_terms && <div><p className="text-xs uppercase text-muted-foreground">Condições</p><p>{q.payment_terms}</p></div>}
+              {q.warranty && <div><p className="text-xs uppercase text-muted-foreground">Garantia</p><p>{q.warranty}</p></div>}
+              {q.delivery_forecast && <div><p className="text-xs uppercase text-muted-foreground">Previsão de entrega</p><p>{fmtDate(q.delivery_forecast)}</p></div>}
+            </div>
+
             {q.notes && (
               <div className="mt-6 border-t pt-4">
                 <p className="text-xs uppercase text-muted-foreground">Observações</p>

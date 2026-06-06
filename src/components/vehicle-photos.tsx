@@ -29,7 +29,7 @@ const PHASES = [
 
 type Phase = (typeof PHASES)[number]["value"];
 
-export function VehiclePhotos({ vehicleId }: { vehicleId: string }) {
+export function VehiclePhotos({ vehicleId, quoteId }: { vehicleId: string; quoteId?: string }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [uploading, setUploading] = React.useState(false);
@@ -38,14 +38,15 @@ export function VehiclePhotos({ vehicleId }: { vehicleId: string }) {
   const [urls, setUrls] = React.useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = React.useState<Phase | "all" | "compare">("all");
 
+  const cacheKey = quoteId ? ["quote-photos", quoteId] : ["vehicle-photos", vehicleId];
+
   const { data: photos = [] } = useQuery({
-    queryKey: ["vehicle-photos", vehicleId],
+    queryKey: cacheKey,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("vehicle_photos")
-        .select("*")
-        .eq("vehicle_id", vehicleId)
-        .order("created_at", { ascending: false });
+      let q = supabase.from("vehicle_photos").select("*").order("created_at", { ascending: false });
+      if (quoteId) q = q.eq("quote_id", quoteId);
+      else q = q.eq("vehicle_id", vehicleId);
+      const { data } = await q;
       return data ?? [];
     },
   });
@@ -73,12 +74,12 @@ export function VehiclePhotos({ vehicleId }: { vehicleId: string }) {
       const path = `${vehicleId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error: upErr } = await supabase.storage.from("vehicle-photos").upload(path, file);
       if (upErr) { toast.error(upErr.message); continue; }
-      const { error } = await supabase.from("vehicle_photos").insert({ vehicle_id: vehicleId, path, uploaded_by: user?.id, phase: uploadPhase });
+      const { error } = await supabase.from("vehicle_photos").insert({ vehicle_id: vehicleId, quote_id: quoteId ?? null, path, uploaded_by: user?.id, phase: uploadPhase });
       if (error) toast.error(error.message);
     }
     setUploading(false);
     e.target.value = "";
-    qc.invalidateQueries({ queryKey: ["vehicle-photos", vehicleId] });
+    qc.invalidateQueries({ queryKey: cacheKey });
     toast.success("Fotos enviadas");
   }
 

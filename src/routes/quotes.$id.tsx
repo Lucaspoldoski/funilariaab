@@ -50,9 +50,13 @@ function QuoteDetail() {
     queryFn: async () => (await supabase.from("quote_items").select("*").eq("quote_id", id).order("created_at")).data ?? [],
   });
   const { data: photos = [] } = useQuery({
-    queryKey: ["quote-photos", quote?.vehicle_id],
+    queryKey: ["quote-photos", id, quote?.vehicle_id],
     enabled: !!quote?.vehicle_id,
-    queryFn: async () => (await supabase.from("vehicle_photos").select("*").eq("vehicle_id", quote!.vehicle_id!).order("created_at")).data ?? [],
+    queryFn: async () => (await supabase
+      .from("vehicle_photos")
+      .select("*")
+      .or(`quote_id.eq.${id},and(quote_id.is.null,vehicle_id.eq.${quote!.vehicle_id!})`)
+      .order("created_at")).data ?? [],
   });
 
   React.useEffect(() => {

@@ -87,7 +87,7 @@ export function VehiclePhotos({ vehicleId, quoteId }: { vehicleId: string; quote
     if (!confirm("Excluir esta foto?")) return;
     await supabase.storage.from("vehicle-photos").remove([p.path]);
     await supabase.from("vehicle_photos").delete().eq("id", p.id);
-    qc.invalidateQueries({ queryKey: ["vehicle-photos", vehicleId] });
+    qc.invalidateQueries({ queryKey: cacheKey });
   }
 
   const filtered = (photos as any[]).filter((p) => activeTab === "all" || activeTab === "compare" || p.phase === activeTab);

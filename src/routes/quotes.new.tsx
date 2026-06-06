@@ -309,14 +309,14 @@ function NewQuote() {
     if (!saved) return;
     if (!confirm("Aprovar este orçamento e gerar uma Ordem de Serviço?")) return;
     const { data: order, error } = await supabase.from("service_orders").insert({
-      client_id: clientId, vehicle_id: vehicleId,
+      client_id: clientId!, vehicle_id: vehicleId!,
       description: notes || null,
       labor_total: laborTotal, parts_total: partsTotal, discount: discountValue, total,
       status: "aprovada", created_by: user?.id,
     }).select("id").single();
     if (error) { toast.error(error.message); return; }
-    const { data: items = [] } = await supabase.from("quote_items").select("*").eq("quote_id", saved.id);
-    if (items.length) {
+    const { data: items } = await supabase.from("quote_items").select("*").eq("quote_id", saved.id);
+    if (items && items.length) {
       await supabase.from("service_order_items").insert(
         (items as any[]).map((i) => ({
           order_id: order.id, item_type: i.item_type, description: i.description,

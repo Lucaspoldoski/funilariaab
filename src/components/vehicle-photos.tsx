@@ -163,7 +163,7 @@ export function VehiclePhotos({ vehicleId, quoteId }: { vehicleId: string; quote
             <PhotoEditor
               photo={viewing}
               url={urls[viewing.id]}
-              onSaved={() => { qc.invalidateQueries({ queryKey: ["vehicle-photos", vehicleId] }); setViewing(null); }}
+              onSaved={() => { qc.invalidateQueries({ queryKey: cacheKey }); setViewing(null); }}
             />
           )}
         </DialogContent>

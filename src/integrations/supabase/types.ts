@@ -89,40 +89,52 @@ export type Database = {
       clients: {
         Row: {
           address: string | null
+          cep: string | null
+          city: string | null
           created_at: string
           created_by: string | null
           document: string | null
           email: string | null
           id: string
           name: string
+          neighborhood: string | null
           notes: string | null
           phone: string | null
+          state: string | null
           updated_at: string
           whatsapp: string | null
         }
         Insert: {
           address?: string | null
+          cep?: string | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
           document?: string | null
           email?: string | null
           id?: string
           name: string
+          neighborhood?: string | null
           notes?: string | null
           phone?: string | null
+          state?: string | null
           updated_at?: string
           whatsapp?: string | null
         }
         Update: {
           address?: string | null
+          cep?: string | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
           document?: string | null
           email?: string | null
           id?: string
           name?: string
+          neighborhood?: string | null
           notes?: string | null
           phone?: string | null
+          state?: string | null
           updated_at?: string
           whatsapp?: string | null
         }
@@ -311,6 +323,7 @@ export type Database = {
           converted_order_id: string | null
           created_at: string
           created_by: string | null
+          delivery_forecast: string | null
           description: string | null
           diagram_marks: Json
           discount: number
@@ -320,17 +333,21 @@ export type Database = {
           notes: string | null
           number: number
           parts_total: number
+          payment_method: string | null
+          payment_terms: string | null
           status: Database["public"]["Enums"]["quote_status"]
           total: number
           updated_at: string
           valid_until: string | null
           vehicle_id: string | null
+          warranty: string | null
         }
         Insert: {
           client_id: string
           converted_order_id?: string | null
           created_at?: string
           created_by?: string | null
+          delivery_forecast?: string | null
           description?: string | null
           diagram_marks?: Json
           discount?: number
@@ -340,17 +357,21 @@ export type Database = {
           notes?: string | null
           number?: number
           parts_total?: number
+          payment_method?: string | null
+          payment_terms?: string | null
           status?: Database["public"]["Enums"]["quote_status"]
           total?: number
           updated_at?: string
           valid_until?: string | null
           vehicle_id?: string | null
+          warranty?: string | null
         }
         Update: {
           client_id?: string
           converted_order_id?: string | null
           created_at?: string
           created_by?: string | null
+          delivery_forecast?: string | null
           description?: string | null
           diagram_marks?: Json
           discount?: number
@@ -360,11 +381,14 @@ export type Database = {
           notes?: string | null
           number?: number
           parts_total?: number
+          payment_method?: string | null
+          payment_terms?: string | null
           status?: Database["public"]["Enums"]["quote_status"]
           total?: number
           updated_at?: string
           valid_until?: string | null
           vehicle_id?: string | null
+          warranty?: string | null
         }
         Relationships: [
           {
@@ -640,15 +664,18 @@ export type Database = {
           delivered_at: string | null
           entry_date: string | null
           expected_delivery: string | null
+          fuel: string | null
           id: string
           insurer: string | null
           mileage: number | null
           model: string
           notes: string | null
           plate: string
+          renavam: string | null
           service_categories: string[] | null
           status: Database["public"]["Enums"]["vehicle_status"]
           updated_at: string
+          version: string | null
           year: number | null
         }
         Insert: {
@@ -662,15 +689,18 @@ export type Database = {
           delivered_at?: string | null
           entry_date?: string | null
           expected_delivery?: string | null
+          fuel?: string | null
           id?: string
           insurer?: string | null
           mileage?: number | null
           model: string
           notes?: string | null
           plate: string
+          renavam?: string | null
           service_categories?: string[] | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           updated_at?: string
+          version?: string | null
           year?: number | null
         }
         Update: {
@@ -684,15 +714,18 @@ export type Database = {
           delivered_at?: string | null
           entry_date?: string | null
           expected_delivery?: string | null
+          fuel?: string | null
           id?: string
           insurer?: string | null
           mileage?: number | null
           model?: string
           notes?: string | null
           plate?: string
+          renavam?: string | null
           service_categories?: string[] | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           updated_at?: string
+          version?: string | null
           year?: number | null
         }
         Relationships: [

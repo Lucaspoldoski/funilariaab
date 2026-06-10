@@ -45,6 +45,7 @@ type Item = { description: string; category?: string; quantity: number; unit_pri
 function NewQuote() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { id: editId } = Route.useSearch();
 
   // Client
   const [clientId, setClientId] = React.useState<string | null>(null);

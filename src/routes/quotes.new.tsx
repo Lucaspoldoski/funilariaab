@@ -461,21 +461,28 @@ function NewQuote() {
           </CardHeader>
           <CardContent className="space-y-3">
             {!vehicleId && (
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input className="pl-9" placeholder="Buscar por placa, marca ou modelo..." value={plateSearch} onChange={(e) => setPlateSearch(e.target.value)} />
-                {plateSearch.length >= 2 && vehicleHits.length > 0 && (
-                  <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
-                    {(vehicleHits as any[]).map((v) => (
-                      <button key={v.id} type="button" onClick={() => selectVehicle(v)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
-                        <div className="font-medium">{v.brand} {v.model} <span className="font-mono text-xs text-muted-foreground">· {v.plate}</span></div>
-                        <div className="text-xs text-muted-foreground">{v.clients?.name ?? "—"}</div>
-                      </button>
-                    ))}
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input className="pl-9" placeholder="Buscar por placa, marca ou modelo..." value={plateSearch} onChange={(e) => setPlateSearch(e.target.value)} />
+                    {plateSearch.length >= 2 && vehicleHits.length > 0 && (
+                      <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
+                        {(vehicleHits as any[]).map((v) => (
+                          <button key={v.id} type="button" onClick={() => selectVehicle(v)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
+                            <div className="font-medium">{v.brand} {v.model} <span className="font-mono text-xs text-muted-foreground">· {v.plate}</span></div>
+                            <div className="text-xs text-muted-foreground">{v.clients?.name ?? "—"}</div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                  <Button type="button" variant="outline" onClick={() => { setShowVehicleForm(true); setPlateSearch(""); }}>
+                    <Plus className="mr-1 h-3 w-3" />Novo
+                  </Button>
+                </div>
                 {plateSearch.length >= 2 && vehicleHits.length === 0 && (
-                  <Button variant="outline" size="sm" className="mt-2 w-full" onClick={() => { setVehicle((v) => ({ ...v, plate: plateSearch.toUpperCase() })); setShowVehicleForm(true); setPlateSearch(""); }}>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => { setVehicle((v) => ({ ...v, plate: plateSearch.toUpperCase() })); setShowVehicleForm(true); setPlateSearch(""); }}>
                     <Plus className="mr-2 h-3 w-3" />Cadastrar veículo "{plateSearch}"
                   </Button>
                 )}

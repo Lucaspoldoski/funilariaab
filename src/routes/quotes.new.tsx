@@ -188,10 +188,10 @@ function NewQuote() {
   progress.photos = (photoCount ?? 0) > 0;
 
   // Auto-save every 10s once the quote has been created (has id)
-  const saveRef = React.useRef<() => Promise<any>>();
+  const saveRef = React.useRef<((opts?: { silent?: boolean }) => Promise<any>) | null>(null);
   React.useEffect(() => {
     if (!quoteId) return;
-    const t = setInterval(() => { saveRef.current?.(); }, 10000);
+    const t = setInterval(() => { saveRef.current?.({ silent: true }); }, 10000);
     return () => clearInterval(t);
   }, [quoteId]);
 

@@ -23,6 +23,7 @@ import { VehicleDiagram, type DiagramMark } from "@/components/vehicle-diagram";
 import { QuoteProgress } from "@/components/quote-progress";
 
 export const Route = createFileRoute("/quotes/new")({
+  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
   component: () => (
     <AppLayout>
       <NewQuote />

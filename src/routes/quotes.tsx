@@ -122,6 +122,7 @@ function QuotesPage() {
                       <td className="py-3 pr-3">
                         <div className="flex justify-end gap-1">
                           <Button asChild variant="ghost" size="icon" title="Abrir"><Link to="/quotes/$id" params={{ id: x.id }}><FileText className="h-4 w-4" /></Link></Button>
+                          <Button asChild variant="ghost" size="icon" title="Editar"><Link to="/quotes/new" search={{ id: x.id }}><Pencil className="h-4 w-4" /></Link></Button>
                           <Button variant="ghost" size="icon" onClick={() => whatsapp(x)} title="WhatsApp"><MessageCircle className="h-4 w-4" /></Button>
                           <Button variant="ghost" size="icon" onClick={() => remove(x.id)}><Trash2 className="h-4 w-4" /></Button>
                         </div>

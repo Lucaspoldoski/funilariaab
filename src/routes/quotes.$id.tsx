@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Printer, MessageCircle, Wrench, Trash2, FileText } from "lucide-react";
+import { ArrowLeft, Printer, MessageCircle, Wrench, Trash2, FileText, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL, fmtDate, fmtDateTime } from "@/lib/format";
 import { VehicleDiagram, type DiagramMark } from "@/components/vehicle-diagram";

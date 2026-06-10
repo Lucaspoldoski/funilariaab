@@ -14,14 +14,14 @@ import {
 } from "@/components/ui/sidebar";
 
 const NAV = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/vehicles", label: "Veículos", icon: Car },
-  { to: "/clients", label: "Clientes", icon: Users },
+  { to: "/quotes", label: "Orçamentos", icon: FileText },
   { to: "/calendar", label: "Agenda", icon: Calendar },
   { to: "/orders", label: "Ordens de Serviço", icon: Wrench },
-  { to: "/quotes", label: "Orçamentos", icon: FileText },
+  { to: "/clients", label: "Clientes", icon: Users },
+  { to: "/vehicles", label: "Veículos", icon: Car },
   { to: "/finance", label: "Financeiro", icon: Wallet },
   { to: "/reports", label: "Relatórios", icon: Receipt },
+  { to: "/", label: "Dashboard", icon: LayoutDashboard },
 ];
 
 const ADMIN_NAV = [

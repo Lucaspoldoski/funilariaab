@@ -294,10 +294,10 @@ function NewQuote() {
       return qId && qNum != null ? { id: qId, number: qNum } : null;
     } finally {
       setSaving(false);
+    }
   }
   saveRef.current = saveQuote;
 
-  }
 
   async function sendWhatsApp() {
     const saved = await saveQuote({ silent: true });

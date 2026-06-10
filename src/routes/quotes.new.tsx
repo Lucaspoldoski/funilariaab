@@ -197,6 +197,33 @@ function NewQuote() {
     return () => clearInterval(t);
   }, [quoteId]);
 
+  // Load existing quote when editing (?id=...)
+  const loadedRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (!editId || loadedRef.current === editId) return;
+    loadedRef.current = editId;
+    (async () => {
+      const { data: q, error } = await supabase.from("quotes").select("*, clients(*), vehicles(*)").eq("id", editId).maybeSingle();
+      if (error || !q) { toast.error("Não foi possível carregar o orçamento"); return; }
+      setQuoteId(q.id); setQuoteNumber((q as any).number);
+      if (q.clients) selectClient(q.clients);
+      if (q.vehicles) selectVehicle(q.vehicles);
+      setNotes((q as any).notes ?? "");
+      setDiscount(Number((q as any).discount) || 0);
+      setDiscountType(((q as any).discount_type as any) || "valor");
+      setValidUntil((q as any).valid_until ?? "");
+      setPaymentMethod((q as any).payment_method ?? "");
+      setPaymentTerms((q as any).payment_terms ?? "");
+      setWarranty((q as any).warranty ?? "");
+      setDeliveryForecast((q as any).delivery_forecast ?? "");
+      setDiagram(Array.isArray((q as any).diagram_marks) ? (q as any).diagram_marks : []);
+      const { data: its } = await supabase.from("quote_items").select("*").eq("quote_id", editId);
+      const svcs = ((its as any[]) ?? []).filter((i) => i.item_type === "servico").map((i) => ({ description: i.description, quantity: Number(i.quantity), unit_price: Number(i.unit_price) }));
+      const prts = ((its as any[]) ?? []).filter((i) => i.item_type === "peca").map((i) => ({ description: i.description, quantity: Number(i.quantity), unit_price: Number(i.unit_price) }));
+      setCustomServices(svcs); setParts(prts);
+    })();
+  }, [editId]);
+
   async function upsertClient(): Promise<string | null> {
     const payload = {
       ...client,

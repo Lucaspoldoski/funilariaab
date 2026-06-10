@@ -151,6 +151,7 @@ function QuoteDetail() {
             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent>{Object.entries(STATUS_LABEL).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
           </Select>
+          <Button asChild variant="outline"><Link to="/quotes/new" search={{ id }}><Pencil className="mr-2 h-4 w-4" />Editar</Link></Button>
           <Button variant="outline" onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>
           <Button variant="outline" onClick={whatsapp}><MessageCircle className="mr-2 h-4 w-4" />WhatsApp</Button>
           <Button onClick={convertToOrder} disabled={converting}>

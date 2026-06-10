@@ -23,6 +23,7 @@ import { VehicleDiagram, type DiagramMark } from "@/components/vehicle-diagram";
 import { QuoteProgress } from "@/components/quote-progress";
 
 export const Route = createFileRoute("/quotes/new")({
+  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
   component: () => (
     <AppLayout>
       <NewQuote />
@@ -44,6 +45,7 @@ type Item = { description: string; category?: string; quantity: number; unit_pri
 function NewQuote() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { id: editId } = Route.useSearch();
 
   // Client
   const [clientId, setClientId] = React.useState<string | null>(null);
@@ -194,6 +196,33 @@ function NewQuote() {
     const t = setInterval(() => { saveRef.current?.({ silent: true }); }, 10000);
     return () => clearInterval(t);
   }, [quoteId]);
+
+  // Load existing quote when editing (?id=...)
+  const loadedRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (!editId || loadedRef.current === editId) return;
+    loadedRef.current = editId;
+    (async () => {
+      const { data: q, error } = await supabase.from("quotes").select("*, clients(*), vehicles(*)").eq("id", editId).maybeSingle();
+      if (error || !q) { toast.error("Não foi possível carregar o orçamento"); return; }
+      setQuoteId(q.id); setQuoteNumber((q as any).number);
+      if (q.clients) selectClient(q.clients);
+      if (q.vehicles) selectVehicle(q.vehicles);
+      setNotes((q as any).notes ?? "");
+      setDiscount(Number((q as any).discount) || 0);
+      setDiscountType(((q as any).discount_type as any) || "valor");
+      setValidUntil((q as any).valid_until ?? "");
+      setPaymentMethod((q as any).payment_method ?? "");
+      setPaymentTerms((q as any).payment_terms ?? "");
+      setWarranty((q as any).warranty ?? "");
+      setDeliveryForecast((q as any).delivery_forecast ?? "");
+      setDiagram(Array.isArray((q as any).diagram_marks) ? (q as any).diagram_marks : []);
+      const { data: its } = await supabase.from("quote_items").select("*").eq("quote_id", editId);
+      const svcs = ((its as any[]) ?? []).filter((i) => i.item_type === "servico").map((i) => ({ description: i.description, quantity: Number(i.quantity), unit_price: Number(i.unit_price) }));
+      const prts = ((its as any[]) ?? []).filter((i) => i.item_type === "peca").map((i) => ({ description: i.description, quantity: Number(i.quantity), unit_price: Number(i.unit_price) }));
+      setCustomServices(svcs); setParts(prts);
+    })();
+  }, [editId]);
 
   async function upsertClient(): Promise<string | null> {
     const payload = {
@@ -375,21 +404,28 @@ function NewQuote() {
           </CardHeader>
           <CardContent className="space-y-3">
             {!clientId && (
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input className="pl-9" placeholder="Buscar por nome, telefone, CPF ou WhatsApp..." value={clientSearch} onChange={(e) => setClientSearch(e.target.value)} />
-                {clientSearch.length >= 2 && clientHits.length > 0 && (
-                  <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
-                    {(clientHits as any[]).map((c) => (
-                      <button key={c.id} type="button" onClick={() => selectClient(c)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
-                        <div className="font-medium">{c.name}</div>
-                        <div className="text-xs text-muted-foreground">{c.phone ?? "—"} · {c.document ?? "—"}</div>
-                      </button>
-                    ))}
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input className="pl-9" placeholder="Buscar por nome, telefone, CPF ou WhatsApp..." value={clientSearch} onChange={(e) => setClientSearch(e.target.value)} />
+                    {clientSearch.length >= 2 && clientHits.length > 0 && (
+                      <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
+                        {(clientHits as any[]).map((c) => (
+                          <button key={c.id} type="button" onClick={() => selectClient(c)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
+                            <div className="font-medium">{c.name}</div>
+                            <div className="text-xs text-muted-foreground">{c.phone ?? "—"} · {c.document ?? "—"}</div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                  <Button type="button" variant="outline" onClick={() => { setShowClientForm(true); setClientSearch(""); }}>
+                    <Plus className="mr-1 h-3 w-3" />Novo
+                  </Button>
+                </div>
                 {clientSearch.length >= 2 && clientHits.length === 0 && (
-                  <Button variant="outline" size="sm" className="mt-2 w-full" onClick={() => { setClient((c) => ({ ...c, name: clientSearch })); setShowClientForm(true); setClientSearch(""); }}>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => { setClient((c) => ({ ...c, name: clientSearch })); setShowClientForm(true); setClientSearch(""); }}>
                     <Plus className="mr-2 h-3 w-3" />Cadastrar "{clientSearch}" como novo cliente
                   </Button>
                 )}
@@ -454,21 +490,28 @@ function NewQuote() {
           </CardHeader>
           <CardContent className="space-y-3">
             {!vehicleId && (
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input className="pl-9" placeholder="Buscar por placa, marca ou modelo..." value={plateSearch} onChange={(e) => setPlateSearch(e.target.value)} />
-                {plateSearch.length >= 2 && vehicleHits.length > 0 && (
-                  <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
-                    {(vehicleHits as any[]).map((v) => (
-                      <button key={v.id} type="button" onClick={() => selectVehicle(v)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
-                        <div className="font-medium">{v.brand} {v.model} <span className="font-mono text-xs text-muted-foreground">· {v.plate}</span></div>
-                        <div className="text-xs text-muted-foreground">{v.clients?.name ?? "—"}</div>
-                      </button>
-                    ))}
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input className="pl-9" placeholder="Buscar por placa, marca ou modelo..." value={plateSearch} onChange={(e) => setPlateSearch(e.target.value)} />
+                    {plateSearch.length >= 2 && vehicleHits.length > 0 && (
+                      <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-lg">
+                        {(vehicleHits as any[]).map((v) => (
+                          <button key={v.id} type="button" onClick={() => selectVehicle(v)} className="block w-full px-3 py-2 text-left text-sm hover:bg-accent">
+                            <div className="font-medium">{v.brand} {v.model} <span className="font-mono text-xs text-muted-foreground">· {v.plate}</span></div>
+                            <div className="text-xs text-muted-foreground">{v.clients?.name ?? "—"}</div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                  <Button type="button" variant="outline" onClick={() => { setShowVehicleForm(true); setPlateSearch(""); }}>
+                    <Plus className="mr-1 h-3 w-3" />Novo
+                  </Button>
+                </div>
                 {plateSearch.length >= 2 && vehicleHits.length === 0 && (
-                  <Button variant="outline" size="sm" className="mt-2 w-full" onClick={() => { setVehicle((v) => ({ ...v, plate: plateSearch.toUpperCase() })); setShowVehicleForm(true); setPlateSearch(""); }}>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => { setVehicle((v) => ({ ...v, plate: plateSearch.toUpperCase() })); setShowVehicleForm(true); setPlateSearch(""); }}>
                     <Plus className="mr-2 h-3 w-3" />Cadastrar veículo "{plateSearch}"
                   </Button>
                 )}

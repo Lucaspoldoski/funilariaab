@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Printer, MessageCircle, Wrench, Trash2, FileText } from "lucide-react";
+import { ArrowLeft, Printer, MessageCircle, Wrench, Trash2, FileText, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL, fmtDate, fmtDateTime } from "@/lib/format";
 import { VehicleDiagram, type DiagramMark } from "@/components/vehicle-diagram";
@@ -151,6 +151,7 @@ function QuoteDetail() {
             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent>{Object.entries(STATUS_LABEL).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
           </Select>
+          <Button asChild variant="outline"><Link to="/quotes/new" search={{ id }}><Pencil className="mr-2 h-4 w-4" />Editar</Link></Button>
           <Button variant="outline" onClick={() => window.print()}><Printer className="mr-2 h-4 w-4" />Imprimir / PDF</Button>
           <Button variant="outline" onClick={whatsapp}><MessageCircle className="mr-2 h-4 w-4" />WhatsApp</Button>
           <Button onClick={convertToOrder} disabled={converting}>

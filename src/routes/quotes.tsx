@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, MessageCircle, Trash2, FileText } from "lucide-react";
+import { Plus, Search, MessageCircle, Trash2, FileText, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL, fmtDate } from "@/lib/format";
 
@@ -122,6 +122,7 @@ function QuotesPage() {
                       <td className="py-3 pr-3">
                         <div className="flex justify-end gap-1">
                           <Button asChild variant="ghost" size="icon" title="Abrir"><Link to="/quotes/$id" params={{ id: x.id }}><FileText className="h-4 w-4" /></Link></Button>
+                          <Button asChild variant="ghost" size="icon" title="Editar"><Link to="/quotes/new" search={{ id: x.id }}><Pencil className="h-4 w-4" /></Link></Button>
                           <Button variant="ghost" size="icon" onClick={() => whatsapp(x)} title="WhatsApp"><MessageCircle className="h-4 w-4" /></Button>
                           <Button variant="ghost" size="icon" onClick={() => remove(x.id)}><Trash2 className="h-4 w-4" /></Button>
                         </div>

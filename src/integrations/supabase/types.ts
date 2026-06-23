@@ -58,8 +58,10 @@ export type Database = {
           created_by: string | null
           id: string
           name: string
+          price: number
           slug: string
           type: Database["public"]["Enums"]["category_type"]
+          unit: string
           updated_at: string
         }
         Insert: {
@@ -69,8 +71,10 @@ export type Database = {
           created_by?: string | null
           id?: string
           name: string
+          price?: number
           slug: string
           type: Database["public"]["Enums"]["category_type"]
+          unit?: string
           updated_at?: string
         }
         Update: {
@@ -80,8 +84,10 @@ export type Database = {
           created_by?: string | null
           id?: string
           name?: string
+          price?: number
           slug?: string
           type?: Database["public"]["Enums"]["category_type"]
+          unit?: string
           updated_at?: string
         }
         Relationships: []

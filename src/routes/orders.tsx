@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/app-layout";
@@ -10,7 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Search, FileText } from "lucide-react";
 import { fmtBRL, fmtDate } from "@/lib/format";
 
-export const Route = createFileRoute("/orders")({ component: () => <AppLayout><OrdersList /></AppLayout> });
+export const Route = createFileRoute("/orders")({ component: OrdersShell });
+function OrdersShell() {
+  const isIndex = useRouterState({ select: (s) => s.location.pathname === "/orders" });
+  return isIndex ? <AppLayout><OrdersList /></AppLayout> : <Outlet />;
+}
 
 const STATUS_LABEL: Record<string, string> = {
   rascunho: "Rascunho", aprovada: "Aprovada", em_execucao: "Em execução", concluida: "Concluída", cancelada: "Cancelada",

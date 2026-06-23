@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, Car, Users, Calendar, FileText, Receipt,
   Wallet, Bell, LogOut, Settings, Wrench, Moon, Sun, ShieldCheck,
+  Package, ClipboardList, Boxes,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,18 +15,21 @@ import {
 } from "@/components/ui/sidebar";
 
 const NAV = [
+  { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/quotes", label: "Orçamentos", icon: FileText },
-  { to: "/calendar", label: "Agenda", icon: Calendar },
-  { to: "/orders", label: "Ordens de Serviço", icon: Wrench },
   { to: "/clients", label: "Clientes", icon: Users },
   { to: "/vehicles", label: "Veículos", icon: Car },
+  { to: "/services", label: "Serviços", icon: Wrench },
+  { to: "/parts", label: "Peças", icon: Package },
+  { to: "/calendar", label: "Agenda", icon: Calendar },
   { to: "/finance", label: "Financeiro", icon: Wallet },
+  { to: "/inventory", label: "Estoque", icon: Boxes },
   { to: "/reports", label: "Relatórios", icon: Receipt },
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/settings", label: "Configurações", icon: Settings },
 ];
 
 const ADMIN_NAV = [
-  { to: "/settings", label: "Configurações", icon: Settings },
+  { to: "/orders", label: "Ordens de Serviço", icon: ClipboardList },
   { to: "/audit", label: "Auditoria", icon: ShieldCheck },
 ];
 
@@ -66,7 +70,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Wrench className="h-5 w-5" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -77,7 +81,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Operação</SidebarGroupLabel>
+            <SidebarGroupLabel>Menu principal</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {NAV.map((item) => {

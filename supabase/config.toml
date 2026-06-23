@@ -1,1 +1,130 @@
+# Supabase Local Development Configuration
+# Docs: https://supabase.com/docs/guides/local-development/cli/config
+#
+# Para iniciar o ambiente local:
+#   npx supabase start
+#
+# Para parar:
+#   npx supabase stop
+#
+# Credenciais locais geradas ao rodar `supabase start`:
+#   API URL : http://127.0.0.1:54321
+#   Studio  : http://127.0.0.1:54323
+#   Inbucket: http://127.0.0.1:54324  ← visualizar e-mails locais
+#   anon key: ver output do `supabase start`
+
 project_id = "swxmhqhphpemdwnqrriv"
+
+# ─── API ─────────────────────────────────────────────────────────────────────
+[api]
+enabled     = true
+port        = 54321
+schemas     = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows    = 1000
+
+[api.tls]
+enabled = false
+
+# ─── Banco de dados ───────────────────────────────────────────────────────────
+[db]
+port         = 54322
+shadow_port  = 54320
+major_version = 17
+
+[db.pooler]
+enabled          = false
+port             = 54329
+pool_mode        = "transaction"
+default_pool_size = 20
+max_client_conn  = 100
+
+# ─── Realtime ────────────────────────────────────────────────────────────────
+[realtime]
+enabled          = true
+ip_version       = "IPv4"
+max_header_length = 4096
+
+# ─── Studio (painel local) ───────────────────────────────────────────────────
+[studio]
+enabled = true
+port    = 54323
+api_url = "http://127.0.0.1"
+
+# ─── Inbucket (servidor de e-mail para testes locais) ────────────────────────
+# Acesse em: http://127.0.0.1:54324
+[inbucket]
+enabled   = true
+port      = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+# ─── Storage ─────────────────────────────────────────────────────────────────
+[storage]
+enabled         = true
+file_size_limit = "50MiB"
+
+[storage.image_transformation]
+enabled = true
+
+# ─── Autenticação ─────────────────────────────────────────────────────────────
+[auth]
+enabled            = true
+# URL do frontend local (Vite dev server)
+site_url           = "http://127.0.0.1:5173"
+additional_redirect_urls = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+]
+jwt_expiry                   = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval  = 10
+enable_signup                = true
+enable_anonymous_sign_ins    = false
+enable_manual_linking        = false
+minimum_password_length      = 8
+password_requirements        = ""
+
+[auth.email]
+enable_signup          = true
+double_confirm_changes = true
+# ↓↓↓ CHAVE PRINCIPAL: desabilita confirmação de e-mail no ambiente local
+enable_confirmations   = false
+secure_password_change = false
+max_frequency          = "1s"
+otp_length             = 6
+otp_expiry             = 86400
+
+[auth.sms]
+enable_signup         = false
+enable_confirmations  = false
+max_frequency         = "5s"
+
+# ─── Provedores externos (OAuth) ─────────────────────────────────────────────
+# Para habilitar um provider, configure as chaves e altere enabled = true
+
+[auth.external.google]
+enabled     = false
+client_id   = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret      = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+redirect_uri = ""
+
+[auth.external.github]
+enabled   = false
+client_id = "env(SUPABASE_AUTH_GITHUB_CLIENT_ID)"
+secret    = "env(SUPABASE_AUTH_GITHUB_SECRET)"
+
+[auth.external.facebook]
+enabled   = false
+client_id = "env(SUPABASE_AUTH_FACEBOOK_CLIENT_ID)"
+secret    = "env(SUPABASE_AUTH_FACEBOOK_SECRET)"
+
+[auth.external.discord]
+enabled   = false
+client_id = "env(SUPABASE_AUTH_DISCORD_CLIENT_ID)"
+secret    = "env(SUPABASE_AUTH_DISCORD_SECRET)"
+
+[auth.external.apple]
+enabled   = false
+client_id = "env(SUPABASE_AUTH_APPLE_CLIENT_ID)"
+secret    = "env(SUPABASE_AUTH_APPLE_SECRET)"

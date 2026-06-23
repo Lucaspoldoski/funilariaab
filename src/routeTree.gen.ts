@@ -13,12 +13,15 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VehiclesIndexRouteImport } from './routes/vehicles/index'
+import { Route as ServicesIndexRouteImport } from './routes/services/index'
+import { Route as PartsIndexRouteImport } from './routes/parts/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as VehiclesNewRouteImport } from './routes/vehicles/new'
 import { Route as VehiclesIdRouteImport } from './routes/vehicles/$id'
@@ -26,6 +29,7 @@ import { Route as QuotesNewRouteImport } from './routes/quotes.new'
 import { Route as QuotesIdRouteImport } from './routes/quotes.$id'
 import { Route as OrdersNewRouteImport } from './routes/orders.new'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as ClientsIdRouteImport } from './routes/clients/$id'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -45,6 +49,11 @@ const QuotesRoute = QuotesRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinanceRoute = FinanceRouteImport.update({
@@ -75,6 +84,16 @@ const IndexRoute = IndexRouteImport.update({
 const VehiclesIndexRoute = VehiclesIndexRouteImport.update({
   id: '/vehicles/',
   path: '/vehicles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartsIndexRoute = PartsIndexRouteImport.update({
+  id: '/parts/',
+  path: '/parts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClientsIndexRoute = ClientsIndexRouteImport.update({
@@ -112,6 +131,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => OrdersRoute,
 } as any)
+const ClientsIdRoute = ClientsIdRouteImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -119,10 +143,12 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
+  '/inventory': typeof InventoryRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
+  '/clients/$id': typeof ClientsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/quotes/$id': typeof QuotesIdRoute
@@ -130,6 +156,8 @@ export interface FileRoutesByFullPath {
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
+  '/parts/': typeof PartsIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/vehicles/': typeof VehiclesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -138,10 +166,12 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
+  '/inventory': typeof InventoryRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
+  '/clients/$id': typeof ClientsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/quotes/$id': typeof QuotesIdRoute
@@ -149,6 +179,8 @@ export interface FileRoutesByTo {
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients': typeof ClientsIndexRoute
+  '/parts': typeof PartsIndexRoute
+  '/services': typeof ServicesIndexRoute
   '/vehicles': typeof VehiclesIndexRoute
 }
 export interface FileRoutesById {
@@ -158,10 +190,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/finance': typeof FinanceRoute
+  '/inventory': typeof InventoryRoute
   '/orders': typeof OrdersRouteWithChildren
   '/quotes': typeof QuotesRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
+  '/clients/$id': typeof ClientsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/orders/new': typeof OrdersNewRoute
   '/quotes/$id': typeof QuotesIdRoute
@@ -169,6 +203,8 @@ export interface FileRoutesById {
   '/vehicles/$id': typeof VehiclesIdRoute
   '/vehicles/new': typeof VehiclesNewRoute
   '/clients/': typeof ClientsIndexRoute
+  '/parts/': typeof PartsIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/vehicles/': typeof VehiclesIndexRoute
 }
 export interface FileRouteTypes {
@@ -179,10 +215,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/finance'
+    | '/inventory'
     | '/orders'
     | '/quotes'
     | '/reports'
     | '/settings'
+    | '/clients/$id'
     | '/orders/$id'
     | '/orders/new'
     | '/quotes/$id'
@@ -190,6 +228,8 @@ export interface FileRouteTypes {
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
+    | '/parts/'
+    | '/services/'
     | '/vehicles/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -198,10 +238,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/finance'
+    | '/inventory'
     | '/orders'
     | '/quotes'
     | '/reports'
     | '/settings'
+    | '/clients/$id'
     | '/orders/$id'
     | '/orders/new'
     | '/quotes/$id'
@@ -209,6 +251,8 @@ export interface FileRouteTypes {
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients'
+    | '/parts'
+    | '/services'
     | '/vehicles'
   id:
     | '__root__'
@@ -217,10 +261,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/finance'
+    | '/inventory'
     | '/orders'
     | '/quotes'
     | '/reports'
     | '/settings'
+    | '/clients/$id'
     | '/orders/$id'
     | '/orders/new'
     | '/quotes/$id'
@@ -228,6 +274,8 @@ export interface FileRouteTypes {
     | '/vehicles/$id'
     | '/vehicles/new'
     | '/clients/'
+    | '/parts/'
+    | '/services/'
     | '/vehicles/'
   fileRoutesById: FileRoutesById
 }
@@ -237,13 +285,17 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
   FinanceRoute: typeof FinanceRoute
+  InventoryRoute: typeof InventoryRoute
   OrdersRoute: typeof OrdersRouteWithChildren
   QuotesRoute: typeof QuotesRouteWithChildren
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
+  ClientsIdRoute: typeof ClientsIdRoute
   VehiclesIdRoute: typeof VehiclesIdRoute
   VehiclesNewRoute: typeof VehiclesNewRoute
   ClientsIndexRoute: typeof ClientsIndexRoute
+  PartsIndexRoute: typeof PartsIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
   VehiclesIndexRoute: typeof VehiclesIndexRoute
 }
 
@@ -275,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/finance': {
@@ -317,6 +376,20 @@ declare module '@tanstack/react-router' {
       path: '/vehicles'
       fullPath: '/vehicles/'
       preLoaderRoute: typeof VehiclesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parts/': {
+      id: '/parts/'
+      path: '/parts'
+      fullPath: '/parts/'
+      preLoaderRoute: typeof PartsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clients/': {
@@ -368,6 +441,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIdRouteImport
       parentRoute: typeof OrdersRoute
     }
+    '/clients/$id': {
+      id: '/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/clients/$id'
+      preLoaderRoute: typeof ClientsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -403,15 +483,29 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
   FinanceRoute: FinanceRoute,
+  InventoryRoute: InventoryRoute,
   OrdersRoute: OrdersRouteWithChildren,
   QuotesRoute: QuotesRouteWithChildren,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
+  ClientsIdRoute: ClientsIdRoute,
   VehiclesIdRoute: VehiclesIdRoute,
   VehiclesNewRoute: VehiclesNewRoute,
   ClientsIndexRoute: ClientsIndexRoute,
+  PartsIndexRoute: PartsIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
   VehiclesIndexRoute: VehiclesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

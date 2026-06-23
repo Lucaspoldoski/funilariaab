@@ -20,6 +20,16 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Environment variables (use .env.example como referência)
+.env.development
+.env.production
+.env.local
+.env.*.local
+
+# Supabase CLI runtime files
+supabase/.branches/
+supabase/.temp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

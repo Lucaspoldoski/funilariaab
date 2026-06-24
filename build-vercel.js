@@ -1,37 +1,39 @@
+import { build } from 'vite';
+import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import react from '@vitejs/plugin-react';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDir = path.join(__dirname, 'dist', 'client');
+
+// Build src/client.tsx as a standalone SPA bundle
+await build(defineConfig({
+      plugins: [react()],
+      resolve: {
+              alias: {
+                        '@': path.join(__dirname, 'src'),
+              },
+      },
+      build: {
+              outDir: clientDir,
+              emptyOutDir: false,
+              rollupOptions: {
+                        input: path.join(__dirname, 'src', 'client.tsx'),
+                        output: {
+                                    entryFileNames: 'assets/client-entry.js',
+                                    chunkFileNames: 'assets/[name]-[hash].js',
+                                    assetFileNames: 'assets/[name]-[hash][extname]',
+                        },
+              },
+      },
+}));
+
+// Find existing CSS from the previous build step
 const assetsDir = path.join(clientDir, 'assets');
-
-if (!fs.existsSync(assetsDir)) {
-    console.error('dist/client/assets not found.');
-    process.exit(1);
-}
-
 const files = fs.readdirSync(assetsDir);
-console.log('All assets:', files);
-
 const cssFile = files.find(f => f.endsWith('.css'));
-
-// The client entrypoint compiled from src/client.tsx
-const clientJs = files.find(f => f.startsWith('client-') && f.endsWith('.js'));
-
-// Fallback to any index-*.js if client.tsx was not found
-const indexJs = files.find(f => /^index--/.test(f))
-  || files.find(f => f.startsWith('index-') && f.endsWith('.js'));
-
-const mainJs = clientJs || indexJs;
-
-if (!mainJs) {
-    console.error('No JS entry point found in assets!');
-    console.error('Available files:', files);
-    process.exit(1);
-}
-
-console.log('Using entrypoint:', mainJs);
 
 const html = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -43,9 +45,9 @@ const html = `<!DOCTYPE html>
                     </head>
                       <body>
                           <div id="root"></div>
-                              <script type="module" src="/assets/${mainJs}"></script>
+                              <script type="module" src="/assets/client-entry.js"></script>
                                 </body>
                                 </html>`;
 
 fs.writeFileSync(path.join(clientDir, 'index.html'), html);
-console.log('index.html created successfully');
+console.log('index.html created successfully with client-entry.js');

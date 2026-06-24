@@ -1,8 +1,10 @@
 {
-      "rewrites": [
-              {
-                        "source": "/(.*)",
-                        "destination": "/index.html"
-              }
-      ]
+        "buildCommand": "npm run build && node build-vercel.js",
+        "outputDirectory": "dist/client",
+        "rewrites": [
+                  {
+                              "source": "/(.*)",
+                              "destination": "/index.html"
+                  }
+        ]
 }

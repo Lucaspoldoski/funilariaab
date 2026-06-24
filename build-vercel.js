@@ -8,14 +8,24 @@ const clientDir = path.join(__dirname, 'dist', 'client');
 const assetsDir = path.join(clientDir, 'assets');
 
 if (!fs.existsSync(assetsDir)) {
-    console.error('dist/client/assets not found.');
-    process.exit(1);
+      console.error('dist/client/assets not found.');
+      process.exit(1);
 }
 
 const files = fs.readdirSync(assetsDir);
 const cssFile = files.find(f => f.endsWith('.css'));
 const jsFiles = files.filter(f => f.endsWith('.js'));
-const mainJs = jsFiles.find(f => f.startsWith('_id-')) || jsFiles[0];
+
+// TanStack Start entry point: index--*.js (double dash) is the main client entry
+// This file contains the React hydration/initialization code
+const mainJs = jsFiles.find(f => /^index--/.test(f))
+  || jsFiles.find(f => /^index-[^-]/.test(f) && f.length > 15)
+  || jsFiles.find(f => f.startsWith('index-'))
+  || jsFiles[0];
+
+console.log('All JS files:', jsFiles.slice(0, 5));
+console.log('CSS:', cssFile);
+console.log('Main JS (entry point):', mainJs);
 
 const html = `<!DOCTYPE html>
 <html lang="pt-BR">
